@@ -21,7 +21,7 @@ module.exports = {
 
             if(user){
                 throw createError(400,"El email ya se encuentra registrado");
-            }
+            };
 
             const token = generateTokenRandom();
 
@@ -38,8 +38,8 @@ module.exports = {
 
             return res.status(201).json({
                 ok : true,
-                msg :'Usuario Registrado',
-                data : userStore
+                msg :'Se ha enviado un email con las intrucciones para completar su registro.',
+                user : userStore
             })
 
         } catch (error) {
