@@ -183,6 +183,8 @@ module.exports = {
                 token
             });
 
+            if(!user) throw createError(400,"El token es inválido");
+
             user.password = password;
             user.token = "";
             await user.save();
@@ -190,7 +192,7 @@ module.exports = {
 
             return res.status(200).json({
                 ok : true,
-                msg :'Password actualizado'
+                msg :'Contraseña actualizada con éxito.'
             })
         } catch (error) {
             return errorResponse(res,error, "CHANGE-PASSWORD")
