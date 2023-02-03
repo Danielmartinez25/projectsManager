@@ -62,7 +62,7 @@ module.exports = {
             });
 
             if(!user){
-                throw createError(403,"Credenciales inválidas | EMAIL");
+                throw createError(403,"Credenciales inválidas");
             };
 
             if(!user.checked){
@@ -70,7 +70,7 @@ module.exports = {
             };
 
             if(!await user.checkedPassword(password)){
-                throw createError(403,"Credenciales inválidas | PASSWORD");
+                throw createError(403,"Credenciales inválidas");
             }
 
             return res.status(200).json({
@@ -78,11 +78,11 @@ module.exports = {
                 msg :'Usuario Logueado',
                 user : {
                     nombre : user.name,
-                    email : user.email,
-                    token : generateJWT({
-                        id: user._id
-                    })
-                }
+                    _id : user._id,
+                },
+                token : generateJWT({
+                    id: user._id
+                })
             })
         } catch (error) {
             return errorResponse(res,error, "LOGIN")
