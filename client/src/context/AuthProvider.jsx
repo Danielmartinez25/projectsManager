@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { createContext } from 'react'
-import { useNavigate } from 'react-router-dom';
 import { clientAxios } from '../config/clientAxios';
 
 const AuthContext = createContext();
@@ -29,13 +28,14 @@ useEffect(() => {
         try {
             const {data} = await clientAxios.get('/users/profile',config);
             setAuth(data.user);
-            setLoading(false)
             
         } catch (error) {
-            console.error(error);
+            console.error(error.response?.data);
+            sessionStorage.removeItem('token')
+        } finally {
             setLoading(false)
 
-        } 
+        }
     }
 
     authUser()

@@ -4,7 +4,7 @@ import useAuth from "../hooks/useAuth";
 
 export const ProtectedLayout = () => {
   const { auth, loading } = useAuth();
-console.log(loading);
+
   if (loading) {
     return <p>Cargando...</p>;
   }
