@@ -77,13 +77,14 @@ module.exports = {
                 ok : true,
                 msg :'Usuario Logueado',
                 user : {
-                    nombre : user.name,
+                    name : user.name,
                     _id : user._id,
                 },
                 token : generateJWT({
                     id: user._id
                 })
-            })
+            });
+            
         } catch (error) {
             return errorResponse(res,error, "LOGIN")
         }

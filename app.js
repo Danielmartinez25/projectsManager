@@ -30,7 +30,7 @@ app
 app
   .use('/api/auth',require('./routes/auth'))
   .use('/api/users',require('./routes/users'))
-  .use('/api/projects', require('./routes/projects'))
+  .use('/api/projects', checkToken, require('./routes/projects'))
   .use('/api/tasks',require('./routes/tasks'))
 
 
