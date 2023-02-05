@@ -9,9 +9,9 @@ const cors = require('cors');
 const checkToken = require('./middlewares/checkToken');
 const whiteList = [process.env.URL_FRONTEND];
 const corsOptions = {
-  origin : function (origin, cb) {
+  origin : function (origin, callback) {
     if(whiteList.includes(origin)){
-      cb(null, true)
+      callback(null, true)
     }else{
       cb(new Error('Error de Cors'))
     }
