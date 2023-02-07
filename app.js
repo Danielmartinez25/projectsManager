@@ -31,7 +31,7 @@ app
   .use('/api/auth',require('./routes/auth'))
   .use('/api/users',require('./routes/users'))
   .use('/api/projects', checkToken, require('./routes/projects'))
-  .use('/api/tasks',require('./routes/tasks'))
+  .use('/api/tasks',checkToken,require('./routes/tasks'))
 
 
 // catch 404 and forward to error handler

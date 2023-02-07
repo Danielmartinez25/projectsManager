@@ -2,15 +2,16 @@ import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Alert } from "../components/Alert";
 import { Collaborator } from "../components/Collaborator";
+import { ModalFormTask } from "../components/ModalFormTask";
 import { Task } from "../components/Task";
 import { useProjects } from "../hooks/useProjects";
 
 export const Project = () => {
-
+  
   const {id} = useParams();
-  const { loading, alert, getProject, project } = useProjects();
+  const { loading, alert, getProject, project, handleShowModal } = useProjects();
 
-  const { name, description, dateExpire, client } = project;
+  const { name, description, dateExpire, client, tasks } = project;
 
   useEffect(() => {
     getProject(id);
@@ -54,7 +55,7 @@ export const Project = () => {
             <p className="font-bold text-3xl mt-10 mb-5">Tareas del proyecto</p>
             <div
               className="flex justify-center items-center gap-1 text-gray-500 hover:text-black cursor-pointer"
-              /*  onClick={handleModalForm} */
+               onClick={handleShowModal}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -73,9 +74,12 @@ export const Project = () => {
               <p>Nueva Tarea</p>
             </div>
           </div>
-          {[1, 2].map((task) => (
-            <Task />
-          ))}
+          {
+            tasks && tasks.length ?
+            tasks.map(task => <Task {...task} key={task._id}/>) :
+            <p>No hay tareas en este proyecto</p>
+          }
+       
           <div className="flex items-center justify-between">
             <p className="font-bold text-3xl mt-10 mb-5">Colaboradores</p>
 
@@ -104,6 +108,7 @@ export const Project = () => {
           {[1, 2].map((collaborator) => (
             <Collaborator />
           ))}
+          <ModalFormTask/>
         </>
       )}
     </>
