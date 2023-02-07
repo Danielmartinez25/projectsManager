@@ -40,7 +40,7 @@ module.exports = {
 
       return res.status(201).json({
         ok: true,
-        msg: "Proyecto guardado",
+        msg: "Proyecto guardado exitosamente",
         project: projectStore,
       });
     } catch (error) {

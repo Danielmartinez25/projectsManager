@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./context/AuthProvider";
+import { ProjectsProvider } from "./context/ProjectsProvider";
 import { AuthLayout } from "./layouts/AuthLayout";
 import { ProtectedLayout } from "./layouts/ProtectedLayout";
 import { ConfirmAccount } from "./pages/ConfirmAccount";
@@ -16,6 +17,7 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <ProjectsProvider>
         <Routes>
           {/* rutas púbicas */}
           <Route path="/" element={<AuthLayout />}>
@@ -36,6 +38,7 @@ function App() {
             <Route path=":id" element={<Project />} />
           </Route>
         </Routes>
+        </ProjectsProvider>
       </AuthProvider>
     </BrowserRouter>
   );
