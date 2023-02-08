@@ -83,7 +83,9 @@ const getProject = async (id) => {
 
         const {data} = await clientAxios.get(`/projects/${id}`,config);
         //console.log(data)
-        setProject(data.project)
+        setProject(data.project);
+
+        sessionStorage.setItem('project',JSON.stringify(data.project))
 
     }catch (error){
         console.error(error);

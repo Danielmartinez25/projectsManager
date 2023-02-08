@@ -5,7 +5,7 @@ import { Alert } from "./Alert";
 import { useParams } from "react-router-dom";
 
 export const FormProject = () => {
-  const { alert, showAlert, storeProject, project } = useProjects();
+  let { alert, showAlert, storeProject } = useProjects();
 
   const { id } = useParams();
 
@@ -27,6 +27,8 @@ export const FormProject = () => {
     
     if (id) {
 
+      let project = JSON.parse(sessionStorage.getItem('project'))
+
       inputName.current.value = project.name;
       inputDescription.current.value = project.description;
       inputDateExpire.current.value = project.dateExpire && project.dateExpire.split("T")[0];
@@ -38,7 +40,6 @@ export const FormProject = () => {
         dateExpire: project.dateExpire.split('T')[0],
         client: project.client,
       });
-
     }
   }, [id]);
 
