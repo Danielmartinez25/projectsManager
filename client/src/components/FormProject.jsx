@@ -1,44 +1,70 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useForm } from "../hooks/useForm";
 import { useProjects } from "../hooks/useProjects";
 import { Alert } from "./Alert";
+import { useParams } from "react-router-dom";
 
 export const FormProject = () => {
+  let { alert, showAlert, storeProject } = useProjects();
 
-  const {alert, showAlert, storeProject} = useProjects();
+  const { id } = useParams();
 
-  const {formValues, handleInputChange, reset} = useForm({
-    name : "",
-    description : "",
-    dateExpire : "",
-    client : ""
-  })
+  const inputName = useRef(null);
+  const inputDescription = useRef(null);
+  const inputDateExpire = useRef(null);
+  const inputClient = useRef(null);
 
-  const {name, description, dateExpire, client} = formValues;
+  const { loading, formValues, handleInputChange, reset, setFormValues } = useForm({
+    name: "",
+    description: "",
+    dateExpire: "",
+    client: "",
+  });
+
+  let { name, description, dateExpire, client } = formValues;
+
+  useEffect(() => {
+    
+    if (id) {
+
+      let project = JSON.parse(sessionStorage.getItem('project'))
+
+      inputName.current.value = project.name;
+      inputDescription.current.value = project.description;
+      inputDateExpire.current.value = project.dateExpire && project.dateExpire.split("T")[0];
+      inputClient.current.value = project.client;
+
+      setFormValues({
+        name: project.name,
+        description: project.description,
+        dateExpire: project.dateExpire.split('T')[0],
+        client: project.client,
+      });
+    }
+  }, [id]);
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    if([name,description,dateExpire,client].includes("")){
+    e.preventDefault();
+    if ([name, description, dateExpire, client].includes("")) {
       showAlert("Todos los campos son obligatorios");
-      return null
-    };
+      return null;
+    }
 
     storeProject({
+      id: id ? id : null,
       name,
       description,
       dateExpire,
-      client
-    })
-  }
+      client,
+    });
+  };
 
   return (
     <form
       className="bg-white py-5 px-5 md:w-4/4 lg:w-3/4 rounded-md border-2"
       onSubmit={handleSubmit}
     >
-     {
-      alert.msg && <Alert {...alert} />
-     }
+      {alert.msg && <Alert {...alert} />}
       <div className="mb-5">
         <label
           htmlFor="name"
@@ -54,6 +80,7 @@ export const FormProject = () => {
           value={name}
           onChange={handleInputChange}
           name="name"
+          ref={inputName}
         />
       </div>
       <div className="mb-5">
@@ -72,6 +99,7 @@ export const FormProject = () => {
           value={description}
           onChange={handleInputChange}
           name="description"
+          ref={inputDescription}
         />
       </div>
       <div className="mb-5">
@@ -88,6 +116,7 @@ export const FormProject = () => {
           value={dateExpire}
           onChange={handleInputChange}
           name="dateExpire"
+          ref={inputDateExpire}
         />
       </div>
       <div className="mb-5">
@@ -105,10 +134,17 @@ export const FormProject = () => {
           value={client}
           onChange={handleInputChange}
           name="client"
+          ref={inputClient}
         />
       </div>
-      <button className={`${false ? "bg-green-600" : "bg-sky-600"} w-full p-3 uppercase font-bold text-white rounded-lg ${false ? "hover:bg-green-500" : "hover:bg-sky-500"}  transition-colors`}>
-        {false ? "actualizar cambios" : "guardar proyecto"}
+      <button
+        className={`${
+          false ? "bg-green-600" : "bg-sky-600"
+        } w-full p-3 uppercase font-bold text-white rounded-lg ${
+          false ? "hover:bg-green-500" : "hover:bg-sky-500"
+        }  transition-colors`}
+      >
+        {id ? "actualizar cambios" : "guardar proyecto"}
       </button>
     </form>
   );

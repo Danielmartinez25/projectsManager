@@ -98,17 +98,17 @@ const ProjectsProvider = ({ children }) => {
         },
       };
 
-      const { data } = await clientAxios.get(`/projects/${id}`, config);
-      //console.log(data)
-      setProject(data.project);
-    } catch (error) {
-      console.error(error);
-      showAlert(
-        error.response ? error.response.data.msg : "Upss, hubo un error",
-        false
-      );
-    } finally {
-      setLoading(false);
+        const {data} = await clientAxios.get(`/projects/${id}`,config);
+        //console.log(data)
+        setProject(data.project);
+
+        sessionStorage.setItem('project',JSON.stringify(data.project))
+
+    }catch (error){
+        console.error(error);
+        showAlert(error.response ? error.response.data.msg : 'Upss, hubo un error', false)
+    }finally{
+        setLoading(false)
     }
   };
 
@@ -127,18 +127,39 @@ const ProjectsProvider = ({ children }) => {
       const { data } = await clientAxios.post(`/projects`, project, config);
       setProjects([...projects, data.project]);
 
-      Toast.fire({
-        icon: "success",
-        title: data.msg,
-      });
+        if(project.id){
 
-      navigate("projects");
-    } catch (error) {
-      console.error(error);
-      showAlert(
-        error.response ? error.response.data.msg : "Upss, hubo un error",
-        false
-      );
+            const {data} = await clientAxios.put(`/projects/${project.id}`,project,config);
+            const projectsUpdated = projects.map(projectState => {
+                if(projectState._id === data.project._id){
+                    return data.project
+                }
+                return projectState
+            });
+
+            setProjects(projectsUpdated);
+            
+            Toast.fire({
+                icon : 'success',
+                title : data.msg
+            });
+
+        }else{
+            const {data} = await clientAxios.post(`/projects`,project,config);
+            setProjects([...projects, data.project]);
+            
+            Toast.fire({
+                icon : 'success',
+                title : data.msg
+            });
+        }
+
+        navigate('projects')
+        
+
+    }catch (error){
+        console.error(error);
+        showAlert(error.response ? error.response.data.msg : 'Upss, hubo un error', false)
     }
   };
 
@@ -173,6 +194,38 @@ const ProjectsProvider = ({ children }) => {
       }
 
   };
+
+const deleteProject = async (id) => {
+    try {
+        const token = sessionStorage.getItem('token');
+        if(!token) return null;
+
+        const config = {
+            headers : {
+                "Content-Type" : "application/json",
+                Authorization : token
+            }
+        }
+
+        const {data} = await clientAxios.delete(`/projects/${id}`,config);
+
+        const projectsFiltered = projects.filter(project => project._id !== id);
+
+        setProjects(projectsFiltered);
+
+        Toast.fire({
+            icon : 'success',
+            title : data.msg
+        });
+
+        navigate('projects')
+
+
+    } catch (error) {
+        console.error(error);
+        showAlert(error.response ? error.response.data.msg : 'Upss, hubo un error', false)
+    }
+}
 
   return (
     <ProjectsContext.Provider

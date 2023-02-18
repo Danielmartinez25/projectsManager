@@ -11,7 +11,7 @@ export const Project = () => {
   const {id} = useParams();
   const { loading, alert, getProject, project, handleShowModal } = useProjects();
 
-  const { name, description, dateExpire, client, tasks } = project;
+  const { name, description, dateExpire, client, tasks, _id } = project;
 
   useEffect(() => {
     getProject(id);
@@ -28,7 +28,7 @@ export const Project = () => {
           <div className="flex justify-between">
             <h1 className="text-4xl uppercase font-bold">{name}</h1>
             <Link
-              to={`/projects/edit-project/1`}
+              to={`/projects/edit-project/${_id}`}
               className="flex justify-center items-center gap-2 text-gray-500 hover:text-black uppercase font-bold"
             >
               <svg
@@ -48,7 +48,10 @@ export const Project = () => {
               <p>Editar</p>
             </Link>
           </div>
+          <div className="flex justify-between items-center">
           <h2 className="text-2xl uppercase font-bold text-gray-600">{client}</h2>
+          <p>Fecha de entrega: {dateExpire && dateExpire.split('T')[0]}</p>
+          </div>
           <hr className="border-b border-gray-600"/>
           <p>{description}</p>
           <div className="flex justify-between">
@@ -106,7 +109,7 @@ export const Project = () => {
             </button>
           </div>
           {[1, 2].map((collaborator) => (
-            <Collaborator />
+            <Collaborator key={collaborator}/>
           ))}
           <ModalFormTask/>
         </>
